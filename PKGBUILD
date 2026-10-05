@@ -138,7 +138,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=19
+pkgrel=20
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -263,7 +263,6 @@ sha256sums=(
 options=(
   '!strip'
 )
-
 _patches=(
   "aidl-aidl_language.cpp.patch"
   "aidl-aidl_language.h.patch"
@@ -284,6 +283,38 @@ _patches=(
   "libziparchive-zip_archive_stream_entry.cc.patch"
   "libziparchive-zip_writer.cc.patch"
 )
+_patches_sums=(
+  "339b89d651b972af9007207ebf57d72c296e4aac2282d8ed8eb1a351c7b6f749"
+  "9b028802105cc1fef7b7bcd9f7aa4d39bf55e00fc7839a784b464ddfd22d4a2d"
+  "9fadc5183cc016d15adf8300b7ea6133f6e186cf7c20ac6df7881d1dd7a029f6"
+  "8733ec6cf100bfcd329e9a593331748d2dd0db8d5d77eb0f2daf94401f6f7715"
+  "12c5cc8b61c7151ffa907a3b7dd3e6e9f80f1beffbfba4a01628c2aee084653e"
+  "f11c788d1bb9da3148750b31966b87eb889293c1870e82f5257cb3c3754074c8"
+  "03bc33b7bc880fbeb6596c2a07e76e1f5a99439816a6ffed0b3d7f3f704b7fb5"
+  "38e906d632f1a7f8501e4dafae8dbf8e9811851ef2adbdda2510936e7ac4aac7"
+  "39a3f19a88ea7f7302fdb59990873be504cd864875c5ec2e3f73a5a062e82491"
+  "7e88f30df4ea10151d1c626eff2b9616b552efc86b75f81e42259a201d742db1"
+  "c5dc53674307a36a83972259234fab57cce06ed36e7fa075e1334386576e785d"
+  "180deb68b94f4c0e4cb0835aebbf26143ea3db7b9fc56c2e274caecd5d76512c"
+  "59a0c5041dd6bf58d6cdf54f29aab7d2a46ce29907be365a9b9f2eb2e915f845"
+  "01b77100ecfc857b47091f6ffdbe24ba8399ad4374c32cb9e786c982e89af01d"
+  "dfeede569e08782bf1cc5354da4dc6bfbba9ce0453d9cbbdfb3467937a9bd8df"
+  "80a2cc9c9f2ec00233d75449684bdef21fd757b8ea5cf3341912dfb86b8df0dd"
+  "e3bdeb93d9f86bd0348864c5eaef6b31cf3ad3f9ef58ce7b89b1b1db654db34e"
+  "56c5d73f3c8efe7a21167def9492c3c199bd1ef2a7d466e3a15603708140ab64"
+)
+_index=0
+for _patch \
+  in "${_patches[@]}"; do
+  source+=(
+    "${_patch}"
+  )
+  sha256sums+=(
+    "${_patches_sums["${_index}"]}"
+  )
+  _index=$((
+    _index + 1))
+done
 
 prepare() {
   local \
@@ -509,3 +540,4 @@ package() {
   #     "usr/bin/${_f}"
   # done
 }
+
