@@ -137,7 +137,7 @@ _android="${_proj}-${_android_ver}"
 _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=16
+pkgrel=17
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
