@@ -269,6 +269,11 @@ build() {
     _cppflags=() \
     _cxxflags=() \
     _protoc
+  git \
+    config \
+    --global \
+      "user.email" \
+        "PKGBUILD@${_pkg}.${_ns}"
   _cppflags+=(
     -DNDEBUG
     -D__ANDROID_SDK_VERSION__="__ANDROID_API"
