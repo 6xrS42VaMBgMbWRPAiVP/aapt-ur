@@ -121,7 +121,7 @@ _android="${_proj}-${_android_ver}"
 _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=6
+pkgrel=7
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -274,7 +274,6 @@ build() {
     "${HOME}/.gitconfig.lock"
   git \
     config \
-    --global \
       "user.email" \
         "PKGBUILD@${_pkg}.${_ns}" || \
   true
