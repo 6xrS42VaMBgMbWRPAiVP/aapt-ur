@@ -55,9 +55,22 @@ elif [[ "${_os}" == "Msys" ]]; then
   _sh="sh"
   _mailcap="winpty"
 fi
+_evmfs_available="$(
+  command \
+    -v \
+    "evmfs" || \
+    true)"
+if [[ ! -v "_evmfs" ]]; then
+  if [[ "${_evmfs_available}" != "" ]]; then
+    _evmfs="true"
+  elif [[ "${_evmfs_available}" == "" ]]; then
+    _evmfs="false"
+  fi
+fi
 if [[ ! -v "_git" ]]; then
   _git="false"
 fi
+_git="true"
 if [[ ! -v "_git_service" ]]; then
   _git_service="gitlab"
   _git_service="github"
@@ -188,6 +201,11 @@ makedepends=(
   "libpng"
   "protobuf"
 )
+if [[ "${_git}" == "true" ]]; then
+  makedepends+=(
+    "git"
+  )
+fi
 _zopfli_optdepends=(
   "zopfli:"
     "For the compression algorithm support."
@@ -218,13 +236,17 @@ _vendor_libziparchive="https://android.googlesource.com/platform/system/libzipar
 _vendor_logging="https://android.googlesource.com/platform/system/logging"
 _vendor_aidl="https://android.googlesource.com/platform/system/tools/aidl"
 _vendor_sysprop="https://android.googlesource.com/platform/system/tools/sysprop"
-if [[ "${_git}" == "false" ]]; then
-  _uri="${_url}/archive/${_commit}.${_archive_format}"
-fi
 _tarname="${_pkg_alt}-${_commit}"
 _tarfile="${_tarname}.${_archive_format}"
 _sum="adb484320ed6fb0265469b10f320f6c71a7eaa3c39279fc06c61e1d60b3b11a6"
-_src="${_tarfile}::${_uri}"
+if [[ "${_git}" == "false" ]]; then
+  _uri="${_url}/archive/${_commit}.${_archive_format}"
+  _src="${_tarfile}::${_uri}"
+elif [[ "${_git}" == "true" ]]; then
+  _uri="git+${_url}#commit=${_commit}"
+  _sum="SKIP"
+  _src="${_tarname}::${_uri}"
+fi
 source=(
   "${_src}"
 )
@@ -262,7 +284,13 @@ _patches=(
 prepare() {
   local \
     _email \
-    _user=()
+    _user=() \
+    _msg=() \
+    _patch_opts=()
+  _patch_opts+=(
+    -Np1
+    -i
+  )
   _email="PKGBUILD@${_pkg}.${_ns}"
   _user=(
     "The Martian Company's"
@@ -270,12 +298,25 @@ prepare() {
   )
   cd \
     "${_tarname}"
+  if [[ "${_git}" == "true" ]]; then
+    git \
+      submodule \
+        update \
+          --init \
+            "${_tarname}"
+  elif [[ "${_git}" == "false" ]]; then
+    _msg=(
+      "Not supported."
+    )
+    echo \
+      "${_msg[*]}" \
+      1>&2
+  fi
   if [[ "${_os}" == "Android" ]]; then
     for _patch \
       in "${_patches[@]}"; do
       patch \
-        -Np1 \
-        -i \
+        "${_patch_opts[@]}" \
         "${srcdir}/${_patch}"
     done
   fi
