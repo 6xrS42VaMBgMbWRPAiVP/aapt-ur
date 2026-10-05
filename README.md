@@ -19,12 +19,14 @@
 [comment]: <> (License along with this program.)
 [comment]: <> (If not, see <https://www.gnu.org/licenses/>.)
 
-# `android-sdk-build-tools`
+# `aapt2`
 
 universal recipe for
 [user repo](
   https://github.com/themartiancompany/ur).
 
-[PKGBUILD](PKGBUILD)
+[PKGBUILD](
+  PKGBUILD)
 
-[LICENSE](COPYING)
+[LICENSE](
+  COPYING)

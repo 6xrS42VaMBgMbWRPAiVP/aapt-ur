@@ -45,15 +45,54 @@ elif [[ "${_os}" == "Android" ]]; then
   _compiler="gcc"
   _libc="gcc-libs"
   _libcompiler="libgcc"
+elif [[ "${_os}" == "Msys" ]]; then
+  _libc="msys2-w32api-runtime"
+  _libc_headers="msys2-w32api-headers"
+  _compiler="gcc"
+  _libcompiler="gcc-libs"
+  _sh="sh"
+  _mailcap="winpty"
 fi
-_proj=android
-_sdk=${_proj}-sdk
-pkgname="${_sdk}-build-tools"
+if [[ ! -v "_git" ]]; then
+  _git="false"
+fi
+if [[ ! -v "_git_service" ]]; then
+  _git_service="gitlab"
+  _git_service="github"
+fi
+if [[ ! -v "_archive_format" ]]; then
+  if [[ "${_git}" == "true" ]]; then
+    if [[ "${_evmfs}" == "true" ]]; then
+      _archive_format="bundle"
+    elif [[ "${_evmfs}" == "false" ]]; then
+      _archive_format="git"
+    fi
+  elif [[ "${_git}" == "false" ]]; then
+    if [[ "${_git_service}" == "github" ]]; then
+      _archive_format="zip"
+    elif [[ "${_git_service}" == "gitlab" ]]; then
+      _archive_format="tar.gz"
+    fi
+  fi
+fi
+if [[ ! -v "_ns" ]]; then
+  _ns="termux"
+  _ns="themartiancompany"
+fi
+if [[ ! -v "_proj" ]]; then
+  _proj=android
+fi
+_sdk=${_proj}
+_pkg=aapt2
+pkgbase="${_pkg}"
+pkgname=(
+  "${_pkg}"
+)
 # _ver="$(
 #   cat \
-#     "${srcdir}/$_android/source.properties" | \
+#     "${srcdir}/$_android/source.properties" |
 #     grep \
-#       ^Pkg.Revision= | \
+#       ^Pkg.Revision= |
 #       sed \
 #         's/Pkg.Revision=\([0-9.]*\).*/\1/')"
 if [[ "${_os}" == "GNU/Linux" ]]; then
@@ -92,16 +131,16 @@ arch=(
   'i686'
   'x86_64'
 )
-url="https://developer.android.com/studio/releases/build-tools"
 # Android SDK is proprietary
 # so while The Martian Company can
 # publish a CI-compatible repository,
 # no binary packages can be distributed.
-# If you're looking for the freely
-# distributable programs in Android SDK
-# please pick them individually.
+# This package is one of the open-source
+# distributable programs which are
+# also part of Android SDK.
+_url="${_http}/${_ns}/${_proj}-build-tools"
 license=(
-  'custom'
+  "Apache2"
 )
 depends=(
   "abseil-cpp"
@@ -118,87 +157,18 @@ makedepends=(
 )
 _gtest="gtest"
 if [[ "${_os}" == "Android" ]]; then
-  # One of the reasons Life
-  # and DogeOS exist is to more or less
-  # destroy GNU/Linux distributions,
-  # which should be correctly perceived
-  # as non-profit associations led
-  # by people with obvious conflicts
-  # of interests, which push developers
-  # to give out their work for free
-  # rather than requiring any money,
-  # which censor and exclude software
-  # and people they don't like, which
-  # break software opportunistically,
-  # which provide sub-par and old versions
-  # of the softwares to users,
-  # which make hard to package and publish
-  # software by imposing each
-  # their own format and nomenclature,
-  # without caring for compatibility,
-  # which allow big market actors
-  # to profit from small ones'
-  # work without giving anything back
-  # but the faulty environments they
-  # provide to developers.
-  # It's evident as of 2026 that
-  # almost all GNU distributions
-  # projects are anything but
-  # an evil cartel of individuals
-  # interested in that in case
-  # GNU/Linux was to ever become the desktop
-  # market dominant OS, them should be
-  # the ones in charge of saying what a common
-  # user should and shouldn't be able to access,
-  # who should be able to get profit
-  # and who not.
-  # There's nothing about democracy
-  # into those projects and even when there is
-  # it's just demagogy.
-  # If it wasn't so, they would
-  # have cared in the last 30 years to
-  # provide ways for developers to profit
-  # from their work whatever way, and they haven't,
-  # really.
-  # If it wasn't so, they would
-  # have correctly found in blockchain networks
-  # the correct storage system for free software
-  # work and changed their development model
-  # into a truly open one.
-  # If you believe supporting those people will
-  # lead you to a decent happy life as a worker,
-  # you're either a kid, a student,
-  # a state or corporate employee who never stopped
-  # to think about how most of the profits
-  # free software manages to produce get
-  # syphoned by large corporations which
-  # have so come to control even free software
-  # projects development.
-  # Generally speaking, the whole reasoning behind
-  # free software development (to be able to keep
-  # a public utility work free for all) it's ill-posed
-  # in a context in which your fellow
-  # citizens sell the software you write to get
-  # profits in your place and leave you starving.
-  # I mean if you get at all to be able to contribute
-  # to those projects directly, because really
-  # they will just exclude you if you ever
-  # started talking about how it doesn't make
-  # any sense to give work out for free to 
-  # people who use it to starve you.
-  # Please think about it many times
-  # before joining and contributing to
-  # Android, Arch, Debian, Fedora,
-  # Termux, Ubuntu and all those others,
-  # because you're just empowering a bunch
-  # of guys who will tell you it's okay
-  # you give out your work for free
-  # to american corporations while you get
-  # to live with paper money from
-  # your nation state instead, like
-  # almost everybody who writes free
-  # software and does not work for
-  # an american corporation.
+  # To keep compatibility
+  # with Termux Debian-based
+  # tree, but really it's
+  # optional and you should
+  # move from Termux altogether
+  # because up so far they've
+  # said themselves unavailable
+  # to ditch the
+  # Debian nomenclature and
+  # adopt one which is compatible
+  # with the Arch/MSys2/MinGW64 one
+  # as well.
   _gtest="googletest"
 fi
 makedepends+=(
@@ -220,13 +190,15 @@ provides=(
   'aidl'
 )
 _android_repo="https://dl.google.com/${_proj}/repository"
+# _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
+# _android_512sum='c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7'
+if [[ "${_git}" == "false" ]]; then
+  _uri="${_url}/archive/${_commit}.${_archive_format}"
+fi
 source=(
-  "${_android_repo}/build-tools_r${_displayversion}-linux.zip"
-   "package.xml"
 )
 sha512sums=(
-  'c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7'
-  '501211771b02940010420a4003b8396d3d6599fb339c2f64959335ab1c3cf615811cc62acaa093c9f4e14bbc019a9e493835573a5136383617d8b5184509d3f8'
+  "boh"
 )
 options=(
   '!strip'
