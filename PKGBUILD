@@ -121,7 +121,7 @@ _android="${_proj}-${_android_ver}"
 _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=7
+pkgrel=8
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -261,6 +261,11 @@ prepare() {
     done
   fi
   true
+  git \
+    config \
+      "user.email" \
+        "PKGBUILD@${_pkg}.${_ns}" || \
+  true
 }
 
 build() {
@@ -270,15 +275,6 @@ build() {
     _cppflags=() \
     _cxxflags=() \
     _protoc
-  rm \
-    "${HOME}/.gitconfig.lock"
-  git \
-    config \
-      "user.email" \
-        "PKGBUILD@${_pkg}.${_ns}" || \
-  true
-  rm \
-    "${HOME}/.gitconfig.lock"
   _cppflags+=(
     -DNDEBUG
     -D__ANDROID_SDK_VERSION__="__ANDROID_API"
