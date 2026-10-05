@@ -98,19 +98,19 @@ pkgname=(
 #       sed \
 #         's/Pkg.Revision=\([0-9.]*\).*/\1/')"
 # if [[ "${_os}" == "GNU/Linux" ]]; then
-  _major=34
-  _minor=0
-  _micro=0
-  _mini=0
-  _android_ver="14"
-  _displayversion=34
-# elif [[ "${_os}" == "GNU/Linux" ]]; then
-#   _major=16
+#   _major=34
 #   _minor=0
 #   _micro=0
-#   _mini=4
+#   _mini=0
 #   _android_ver="14"
 #   _displayversion=34
+# elif [[ "${_os}" == "GNU/Linux" ]]; then
+   _major=16
+   _minor=0
+   _micro=0
+   _mini=4
+   _android_ver="14"
+   _displayversion=34
 # fi
 _ver="${_major}.${_minor}.${_micro}"
 if [[ "${_mini}" != "" ]]; then
