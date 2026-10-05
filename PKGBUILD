@@ -316,6 +316,8 @@ prepare() {
     echo \
       "${_msg[*]}" \
       1>&2
+    exit \
+      1
   fi
   if [[ "${_os}" == "Android" ]]; then
     for _patch \
