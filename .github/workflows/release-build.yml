@@ -1216,7 +1216,7 @@ jobs:
         id:
           version
       - name:
-          Upload Termux package.
+          Upload Android package.
         uses:
           actions/upload-release-asset@v1
         env:
@@ -1227,9 +1227,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "aapt-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "dogeos-android-aapt-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
   arch_release:
@@ -2033,9 +2033,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "aapt-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_name:
-            "dogeos-gnu-android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
+            "dogeos-gnu-aapt-${{ steps.version.outputs.version }}-${{ matrix.architecture }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
   msys2_release:
@@ -2664,9 +2664,9 @@ jobs:
             ${{ github.event.release.upload_url }}
             # ${{ steps.create_release.outputs.upload_url }}
           asset_path:
-            "android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
+            "aapt-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_name:
-            "dogeos-windows-android-sdk-build-tools-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
+            "dogeos-windows-aapt-${{ steps.version.outputs.version }}-${{ matrix.arch }}.pkg.tar.xz"
           asset_content_type:
             application/gzip
 

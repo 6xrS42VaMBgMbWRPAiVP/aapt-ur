@@ -85,7 +85,7 @@ if [[ ! -v "_proj" ]]; then
   _proj=android
 fi
 _sdk=${_proj}
-_pkg=aapt2
+_pkg=aapt
 pkgbase="${_pkg}"
 pkgname=(
   "${_pkg}"
@@ -193,6 +193,7 @@ provides=(
   'aapt'
   'aapt2'
   'aidl'
+  'sysprop'
 )
 _android_repo="https://dl.google.com/${_proj}/repository"
 # _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
@@ -241,13 +242,16 @@ _patches=(
 prepare() {
   cd \
     "${_tarname}"
-  for _patch \
-    in "${_patches[@]}"; do
-    patch \
-      -Np1 \
-      -i \
-      "${srcdir}/${_patch}"
-  done
+  if [[ "${_os}" == "Android" ]]; then
+    for _patch \
+      in "${_patches[@]}"; do
+      patch \
+        -Np1 \
+        -i \
+        "${srcdir}/${_patch}"
+    done
+  fi
+  true
 }
 
 build() {
