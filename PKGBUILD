@@ -270,11 +270,16 @@ build() {
     _cppflags=() \
     _cxxflags=() \
     _protoc
+  rm \
+    "${HOME}/.gitconfig.lock"
   git \
     config \
     --global \
       "user.email" \
-        "PKGBUILD@${_pkg}.${_ns}"
+        "PKGBUILD@${_pkg}.${_ns}" || \
+  true
+  rm \
+    "${HOME}/.gitconfig.lock"
   _cppflags+=(
     -DNDEBUG
     -D__ANDROID_SDK_VERSION__="__ANDROID_API"
