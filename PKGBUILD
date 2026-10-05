@@ -121,7 +121,7 @@ _android="${_proj}-${_android_ver}"
 _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=8
+pkgrel=9
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -249,6 +249,14 @@ _patches=(
 )
 
 prepare() {
+  local \
+    _email \
+    _user=()
+  _email="PKGBUILD@${_pkg}.${_ns}"
+  _user=(
+    "The Martian Company's"
+    "Aapt Universal Recipe"
+  )
   cd \
     "${_tarname}"
   if [[ "${_os}" == "Android" ]]; then
@@ -260,11 +268,15 @@ prepare() {
         "${srcdir}/${_patch}"
     done
   fi
-  true
   git \
     config \
       "user.email" \
-        "PKGBUILD@${_pkg}.${_ns}" || \
+        "${_email}" || \
+  true
+  git \
+    config \
+      "user.name" \
+        "${_user[*]}" || \
   true
 }
 
