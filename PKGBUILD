@@ -138,7 +138,9 @@ arch=(
 # This package is one of the open-source
 # distributable programs which are
 # also part of Android SDK.
+_http="https://${_git_service}.com"
 _url="${_http}/${_ns}/${_proj}-build-tools"
+url="${_url}"
 license=(
   "Apache2"
 )
