@@ -198,14 +198,27 @@ _android_repo="https://dl.google.com/${_proj}/repository"
 if [[ "${_git}" == "false" ]]; then
   _uri="${_url}/archive/${_commit}.${_archive_format}"
 fi
+_tarname="${_pkg}-${_commit}"
+_tarfile="${_tarname}.${_archive_format}"
+_sum="adb484320ed6fb0265469b10f320f6c71a7eaa3c39279fc06c61e1d60b3b11a6"
+_src="${_tarfile}::${_uri}"
 source=(
+  "${_src}"
 )
-sha512sums=(
-  "boh"
+# sha512sums=(
+#   "${_android_512sum}"
+# )
+sha256sums=(
+  "${_sum}"
 )
 options=(
   '!strip'
 )
+
+prepare() {
+  cd \
+    "${_tarname}"
+}
 
 _root_get() {
   local \
