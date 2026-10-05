@@ -27,6 +27,8 @@
 #     <pellegrinoprevete@gmail.com>
 #     <dvorak@0x87003Bd6C074C713783df04f36517451fF34CBEf>
 # Contributors:
+#   Biswapriyo Nath
+#     <nathbappai@gmail.com>
 #   Amin Vakil
 #     <info AT aminvakil DOT com>
 #   xgdgsc
@@ -215,9 +217,98 @@ options=(
   '!strip'
 )
 
+_patches=(
+  "aidl-aidl_language.cpp.patch"
+  "aidl-aidl_language.h.patch"
+  "androidfw-Asset.cpp.patch"
+  "androidfw-AssetManager.cpp.patch"
+  "androidfw-ResourceTypes.cpp.patch"
+  "incfs-util-map_ptr.cpp.patch"
+  "include-android-base-unique_fd.h.patch"
+  "libbase-properties.cpp.patch"
+  "libcutils-native_handle.cpp.patch"
+  "libcutils-properties.cpp.patch"
+  "libcutils-sockets_unix.cpp.patch"
+  "liblog-android-log.h.patch"
+  "liblog-logger_write.cpp.patch"
+  "libutils-Threads.cpp.patch"
+  "libutils-misc.cpp.patch"
+  "libziparchive-zip_archive.cc.patch"
+  "libziparchive-zip_archive_stream_entry.cc.patch"
+  "libziparchive-zip_writer.cc.patch"
+)
+
 prepare() {
   cd \
     "${_tarname}"
+  for _patch \
+    in "${_patches[@]}"; do
+    patch \
+      -Np1 \
+      -i \
+      "${srcdir}/${_patch}"
+  done
+}
+
+build() {
+  local \
+    _cflags=() \
+    _cmake_opts=() \
+    _cppflags=() \
+    _cxxflags=() \
+    _protoc
+  _cppflags+=(
+    -DNDEBUG
+    -D__ANDROID_SDK_VERSION__="__ANDROID_API"
+    -D_FILE_OFFSET_BITS="64"
+    -DPROTOBUF_USE_DLLS
+    -DANDROID_BUILD_TOOLS_DEV_MODE="ON"
+  )
+  _cflags+=(
+    "${CFLAGS}"
+    -fPIC
+  )
+  _cxxflags=(
+    "${CXXFLAGS}"
+    -fPIC
+  )
+  _protoc="$(
+    command \
+      -v \
+      "protoc")"
+  _cmake_opts+=(
+    # --trace-expand 
+    # -G
+    #   "Ninja"
+    -D
+      CMAKE_BUILD_TYPE="Release"
+    -D
+      CMAKE_INSTALL_PREFIX="/usr/"
+    -D
+      protobuf_generate_PROTOC_EXE="${_protoc}"
+    # -D
+    #   CMAKE_VERBOSE_MAKEFILE:BOOL="ON"
+    -S
+      "${srcdir}/${_tarname}/"
+  )
+  _flags+=(
+    CC="${_cc}"
+    CXX="${_cxx}"
+    CXXFLAGS="${_cxxflags[*]}"
+  )
+  CFLAGS="${_cflags[*]}" \
+  CPPFLAGS="${_cppflags[*]}" \
+  CXXFLAGS="${_cxxflags[*]}" \
+  cmake \
+    -B \
+      "${srcdir}/${_tarname}/build/" \
+    "${_cmake_opts[@]}"
+  CFLAGS="${_cflags[*]}" \
+  CPPFLAGS="${_cppflags[*]}" \
+  CXXFLAGS="${_cxxflags[*]}" \
+  cmake \
+    --build \
+      "${srcdir}/${_tarname}/build/"
 }
 
 _root_get() {
@@ -255,66 +346,69 @@ package() {
   _root="$(
     _root_get)"
   cd \
-    "${pkgdir}"
-  install \
-    -d \
-    "usr/share/licenses/${pkgname}/"
-  ln \
-    -s \
-    "${_root}/opt/${_sdk}/build-tools/${_ver}/NOTICE.txt" \
-    "usr/share/licenses/${pkgname}/NOTICE.txt"
-  sed \
-    -i \
-    "s/@major@/${_major}/g;
-     s/@minor@/${_minor}/g;
-     s/@micro@/${_micro}/g;
-     s/@displayv@/${_displayversion}/g;
-     s/@pathv@/${_ver}/g" \
-     "${srcdir}/package.xml"
-  install \
-    -Dm644 \
-    "${srcdir}/package.xml" \
-    "opt/${_sdk}/build-tools/${_ver}/package.xml"
-  ln \
-    -s \
-    "${_root}/opt/${_sdk}/build-tools/${_ver}/package.xml" \
-    "usr/share/licenses/${pkgname}/package.xml"
-  _target="opt/${_sdk}/build-tools/${_ver}"
-  mkdir \
-    -p \
-    "${_target}"
-  cp \
-    -r \
-    "${srcdir}/${_android}/"* \
-    "${_target}"
-  chmod \
-    +Xr \
-    -R \
-    "${_target}"
+    "${_tarname}"
+  cmake \
+    --install \
+      "${srcdir}/${_tarname}/build/"
+  # install \
+  #   -d \
+  #   "usr/share/licenses/${pkgname}/"
+  # ln \
+  #   -s \
+  #   "${_root}/opt/${_sdk}/build-tools/${_ver}/NOTICE.txt" \
+  #   "usr/share/licenses/${pkgname}/NOTICE.txt"
+  # sed \
+  #   -i \
+  #   "s/@major@/${_major}/g;
+  #    s/@minor@/${_minor}/g;
+  #    s/@micro@/${_micro}/g;
+  #    s/@displayv@/${_displayversion}/g;
+  #    s/@pathv@/${_ver}/g" \
+  #    "${srcdir}/package.xml"
+  # install \
+  #   -Dm644 \
+  #   "${srcdir}/package.xml" \
+  #   "opt/${_sdk}/build-tools/${_ver}/package.xml"
+  # ln \
+  #   -s \
+  #   "${_root}/opt/${_sdk}/build-tools/${_ver}/package.xml" \
+  #   "usr/share/licenses/${pkgname}/package.xml"
+  # _target="opt/${_sdk}/build-tools/${_ver}"
+  # mkdir \
+  #   -p \
+  #   "${_target}"
+  # cp \
+  #   -r \
+  #   "${srcdir}/${_android}/"* \
+  #   "${_target}"
+  # chmod \
+  #   +Xr \
+  #   -R \
+  #   "${_target}"
   # Add symlinks to binaries to usr/bin/
-  mkdir \
-    -p \
-    "usr/bin/"
+  # mkdir \
+  #   -p \
+  #   "usr/bin/"
   # lld is also provided by
   # extra/lld, not creating symlink
-  _binaries=( $(
-    find \
-      "${_target}" \
-      -maxdepth \
-        1 \
-      -type \
-        "f" \
-      -executable \
-      -not \
-      -iname \
-        "lld" \
-      -printf \
-        "%f\n")
-  )
-  for _f in ${_binaries[@]}; do
-    ln \
-      -s \
-      "${_root}/${_target}/${_f}" \
-      "usr/bin/${_f}"
-  done
+  # _binaries=( $(
+  #   find \
+  #     "${_target}" \
+  #     -maxdepth \
+  #       1 \
+  #     -type \
+  #       "f" \
+  #     -executable \
+  #     -not \
+  #     -iname \
+  #       "lld" \
+  #     -printf \
+  #       "%f\n")
+  # )
+  # for _f in ${_binaries[@]}; do
+  #   ln \
+  #     -s \
+  #     "${_root}/${_target}/${_f}" \
+  #     "usr/bin/${_f}"
+  # done
 }
