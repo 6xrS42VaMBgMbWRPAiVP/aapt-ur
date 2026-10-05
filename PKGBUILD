@@ -138,7 +138,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=20
+pkgrel=21
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -321,7 +321,9 @@ prepare() {
     _email \
     _user=() \
     _msg=() \
-    _patch_opts=()
+    _patch_opts=() \
+    _submodule_path \
+    _submodules_paths=()
   _patch_opts+=(
     -Np1
     -i
@@ -340,6 +342,41 @@ prepare() {
           update \
             --init \
 	    --recursive
+      _submodules_paths+=( $(
+        cat \
+          ".gitmodules" |
+          grep \
+            "^[submodule \"" |
+            sed |
+              "s/^\[submodule \"//g;
+               s/^\"\]")
+      )
+      for _submodule_path \
+        in "${_submodules_paths[@]}"; do
+        git \
+          -C \
+            "${PWD}/${_path}" \
+          config \
+            "user.email" \
+              "${_email}" || \
+        true
+        git \
+          -C \
+            "${PWD}/${_path}" \
+          config \
+            "user.name" \
+              "${_user[*]}" || \
+        true
+        if [[ "${_os}" == "GNU/Linux" ]]; then
+          git \
+            -C \
+              "${PWD}/${_path}" \
+            config \
+              set \
+                "advice.mergeConfict" \
+                  "false"
+        fi
+      done
     fi
   elif [[ "${_git}" == "false" ]]; then
     _msg=(
@@ -373,7 +410,7 @@ prepare() {
     git \
       config \
         set \
-	  "advice.mergeConfict" \
+          "advice.mergeConfict" \
 	    "false"
   fi
 }
