@@ -147,21 +147,9 @@ url="${_url}"
 license=(
   "Apache2"
 )
-depends=(
-  "abseil-cpp"
-  "${_libc}"
-  "${_libcompiler}"
-  'bash'
-  "fmt"
-  'zlib'
-  "zopfli"
-)
-makedepends=(
-  "cmake"
-  "${_compiler}"
-  "protobuf"
-)
+_expat="expat"
 _gtest="gtest"
+_zopfli="zopfli"
 if [[ "${_os}" == "Android" ]]; then
   # To keep compatibility
   # with Termux Debian-based
@@ -175,10 +163,25 @@ if [[ "${_os}" == "Android" ]]; then
   # adopt one which is compatible
   # with the Arch/MSys2/MinGW64 one
   # as well.
+  _expat="libexpat"
   _gtest="googletest"
+  _zopfli="libzopfli"
 fi
-makedepends+=(
+depends=(
+  "abseil-cpp"
+  "${_libc}"
+  "${_libcompiler}"
+  'bash'
+  "fmt"
+  'zlib'
+  "${_zopfli}"
+)
+makedepends=(
+  "cmake"
+  "${_compiler}"
   "${_gtest}"
+  "fmt"
+  "protobuf"
 )
 _zopfli_optdepends=(
   "zopfli:"
