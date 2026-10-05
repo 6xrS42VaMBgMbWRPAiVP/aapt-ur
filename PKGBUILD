@@ -120,7 +120,7 @@ fi
 _android="${_proj}-${_android_ver}"
 pkgver="r${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=5
+pkgrel=6
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -173,6 +173,9 @@ depends=(
   "${_libcompiler}"
   'bash'
   "fmt"
+  "libpng"
+  # sysprof-specific
+  "protobuf"
   'zlib'
   "${_zopfli}"
 )
@@ -181,6 +184,7 @@ makedepends=(
   "${_compiler}"
   "${_gtest}"
   "fmt"
+  "libpng"
   "protobuf"
 )
 _zopfli_optdepends=(
