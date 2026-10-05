@@ -75,6 +75,9 @@ if [[ ! -v "_git_service" ]]; then
   _git_service="gitlab"
   _git_service="github"
 fi
+if [[ ! -v "_submodule_update" ]]; then
+  _submodule_update="true"
+fi
 if [[ ! -v "_archive_format" ]]; then
   if [[ "${_git}" == "true" ]]; then
     if [[ "${_evmfs}" == "true" ]]; then
@@ -134,7 +137,7 @@ _android="${_proj}-${_android_ver}"
 _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
-pkgrel=10
+pkgrel=11
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -299,11 +302,13 @@ prepare() {
   cd \
     "${_tarname}"
   if [[ "${_git}" == "true" ]]; then
-    git \
-      submodule \
-        update \
-          --init \
-            "${_tarname}"
+    if [[ "${_submodule_updateh}" == "true" ]]; then
+      git \
+        submodule \
+          update \
+            --init \
+              "${_tarname}"
+    fi
   elif [[ "${_git}" == "false" ]]; then
     _msg=(
       "Not supported."
