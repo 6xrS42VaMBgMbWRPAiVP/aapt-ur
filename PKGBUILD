@@ -41,7 +41,7 @@ if [[ "${_os}" == "Android" ]]; then
   _compiler="clang"
   _libcompiler="libc++"
   _libc="ndk-sysroot"
-elif [[ "${_os}" == "Android" ]]; then
+elif [[ "${_os}" == "GNU/Linux" ]]; then
   _compiler="gcc"
   _libc="gcc-libs"
   _libcompiler="libgcc"
@@ -117,6 +117,7 @@ fi
 _android="${_proj}-${_android_ver}"
 _ver="${_major}.${_minor}.${_micro}"
 pkgver="r${_ver}"
+_commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 pkgrel=3
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
