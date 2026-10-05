@@ -207,6 +207,17 @@ provides=(
 _android_repo="https://dl.google.com/${_proj}/repository"
 # _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
 # _android_512sum='c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7'
+_vendor_build_uri="https://android.googlesource.com/platform/build"
+_zopfli_uri="https://android.googlesource.com/platform/external/zopfli"
+_vendor_base_uri="https://android.googlesource.com/platform/frameworks/base"
+_vendor_native_uri="https://android.googlesource.com/platform/frameworks/native"
+_vendor_core_uri="https://android.googlesource.com/platform/system/core"
+_vendor_incremental_delivery="https://android.googlesource.com/platform/system/incremental_delivery"
+_vendor_libbase="https://android.googlesource.com/platform/system/libbase"
+_vendor_libziparchive="https://android.googlesource.com/platform/system/libziparchive"
+_vendor_logging="https://android.googlesource.com/platform/system/logging"
+_vendor_aidl="https://android.googlesource.com/platform/system/tools/aidl"
+_vendor_sysprop="https://android.googlesource.com/platform/system/tools/sysprop"
 if [[ "${_git}" == "false" ]]; then
   _uri="${_url}/archive/${_commit}.${_archive_format}"
 fi
