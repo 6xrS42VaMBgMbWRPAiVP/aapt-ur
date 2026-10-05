@@ -117,7 +117,6 @@ if [[ "${_mini}" != "" ]]; then
   _ver="${_ver}.${_mini}"
 fi
 _android="${_proj}-${_android_ver}"
-_ver="${_major}.${_minor}.${_micro}"
 pkgver="r${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 pkgrel=3
