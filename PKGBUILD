@@ -86,6 +86,7 @@ if [[ ! -v "_proj" ]]; then
 fi
 _sdk=${_proj}
 _pkg=aapt
+_pkg_alt="${_proj}-build-tools"
 pkgbase="${_pkg}"
 pkgname=(
   "${_pkg}"
@@ -141,7 +142,7 @@ arch=(
 # distributable programs which are
 # also part of Android SDK.
 _http="https://${_git_service}.com"
-_url="${_http}/${_ns}/${_proj}-build-tools"
+_url="${_http}/${_ns}/${_pkg_alt}"
 url="${_url}"
 license=(
   "Apache2"
@@ -200,7 +201,7 @@ _android_repo="https://dl.google.com/${_proj}/repository"
 if [[ "${_git}" == "false" ]]; then
   _uri="${_url}/archive/${_commit}.${_archive_format}"
 fi
-_tarname="${_pkg}-${_commit}"
+_tarname="${_pkg_alt}-${_commit}"
 _tarfile="${_tarname}.${_archive_format}"
 _sum="adb484320ed6fb0265469b10f320f6c71a7eaa3c39279fc06c61e1d60b3b11a6"
 _src="${_tarfile}::${_uri}"
