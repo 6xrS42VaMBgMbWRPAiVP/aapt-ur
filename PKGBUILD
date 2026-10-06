@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=38
+pkgrel=39
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -430,9 +430,8 @@ prepare() {
       -c \
         protocol.file.allow='always' \
       submodule \
-          --depth \
-            1 \
         update \
+          --recommend-shallow \
           "vendor/base" || \
     true
     git \
@@ -442,6 +441,7 @@ prepare() {
         protocol.file.allow='always' \
       submodule \
         update \
+          --recommend-shallow \
           "vendor/base" || \
     true
   fi
@@ -453,7 +453,8 @@ prepare() {
         submodule \
           update \
             --init \
-            --recursive
+            --recursive \
+	    --recommend-shallow
       _submodules_paths+=( $(
         cat \
           ".gitmodules" |
