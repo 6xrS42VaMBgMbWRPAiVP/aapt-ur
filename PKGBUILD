@@ -78,6 +78,9 @@ fi
 if [[ ! -v "_submodule_update" ]]; then
   _submodule_update="true"
 fi
+if [[ ! -v "_depth1" ]]; then
+  _depth1="true"
+fi
 if [[ ! -v "_archive_format" ]]; then
   if [[ "${_git}" == "true" ]]; then
     if [[ "${_evmfs}" == "true" ]]; then
@@ -96,6 +99,10 @@ fi
 if [[ ! -v "_ns" ]]; then
   _ns="termux"
   _ns="themartiancompany"
+fi
+if [[ ! -v "_base_ns" ]]; then
+  _base_ns="themartiancompany"
+  _base_ns="lineageos"
 fi
 if [[ ! -v "_proj" ]]; then
   _proj=android
@@ -138,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=21
+pkgrel=24
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -227,38 +234,48 @@ provides=(
   'sysprop'
 )
 _android_repo="https://dl.google.com/${_proj}/repository"
+_googlesource_http_="https://${_proj}.googlesource.com"
 # _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
 # _android_512sum='c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7'
-_vendor_build_uri="https://android.googlesource.com/platform/build"
-_zopfli_uri="https://android.googlesource.com/platform/external/zopfli"
-_vendor_base_uri="https://android.googlesource.com/platform/frameworks/base"
-_vendor_native_uri="https://android.googlesource.com/platform/frameworks/native"
-_vendor_core_uri="https://android.googlesource.com/platform/system/core"
-_vendor_incremental_delivery="https://android.googlesource.com/platform/system/incremental_delivery"
-_vendor_libbase="https://android.googlesource.com/platform/system/libbase"
-_vendor_libziparchive="https://android.googlesource.com/platform/system/libziparchive"
-_vendor_logging="https://android.googlesource.com/platform/system/logging"
-_vendor_aidl="https://android.googlesource.com/platform/system/tools/aidl"
-_vendor_sysprop="https://android.googlesource.com/platform/system/tools/sysprop"
+_vendor_build_url="${_googlesource_http}/platform/build"
+_zopfli_uri="${_googlesource_http}/platform/external/zopfli"
+_vendor_base_uri="${_googlesource_http}/platform/frameworks/base"
+_vendor_base_url="${_http}/${_base_ns}/${_proj}_frameworks_base"
+_vendor_native_uri="${_googlesource_http}/platform/frameworks/native"
+_vendor_core_uri="${_googlesource_http}/platform/system/core"
+_vendor_incremental_delivery="${_googlesource_http}/platform/system/incremental_delivery"
+_vendor_libbase="${_googlesource_http}/platform/system/libbase"
+_vendor_libziparchive="${_googlesource_http}/platform/system/libziparchive"
+_vendor_logging="${_googlesource_http}/platform/system/logging"
+_vendor_aidl="${_googlesource_http}/platform/system/tools/aidl"
+_vendor_sysprop="${_googlesource_http}/platform/system/tools/sysprop"
 _tarname="${_pkg_alt}-${_commit}"
 _tarfile="${_tarname}.${_archive_format}"
+_base_tarname="base-${_frameworks_base_commit}"
 _sum="adb484320ed6fb0265469b10f320f6c71a7eaa3c39279fc06c61e1d60b3b11a6"
+_base_sum="boh"
 if [[ "${_git}" == "false" ]]; then
   _uri="${_url}/archive/${_commit}.${_archive_format}"
   _src="${_tarfile}::${_uri}"
+  _vendor_base_uri="${_vendor_base_url}/archive/${_frameworks_base_commit}.${_archive_format}"
+  _vendor_base_src="${_base_tarfile}::${_vendor_base_uri}"
 elif [[ "${_git}" == "true" ]]; then
   _uri="git+${_url}#commit=${_commit}"
   _sum="SKIP"
   _src="${_tarname}::${_uri}"
+  _vendor_base_uri="git+${_vendor_base_url}#commit=${_frameworks_base_commit}"
+  _vendor_base_src="${_base_tarname}::${_vendor_base_uri}"
 fi
 source=(
   "${_src}"
+  "${_vendor_base_src}"
 )
 # sha512sums=(
 #   "${_android_512sum}"
 # )
 sha256sums=(
   "${_sum}"
+  "${_base_sum}"
 )
 options=(
   '!strip'
@@ -333,23 +350,55 @@ prepare() {
     "The Martian Company's"
     "Aapt Universal Recipe"
   )
+  if [[ "${_depth1}" == "true" ]]; then
+    git \
+      -C \
+        "${srcdir}/${_tarname}" \
+      submodule \
+        init
+    git \
+      init \
+        "${_base_tarname}"
+    git \
+      -C \
+        "${_base_tarname}" \
+      remote \
+        add \
+          "${_vendor_base_uri}"
+    git \
+      -C \
+      "${_base_tarname}" \
+      config \
+        --local \
+          "submodule.vendor/base.url" \
+         "${srcdir}/${_base_tarname}"
+    git \
+      -C \
+        "${_base_tarname}" \
+      -c \
+        protocol.file.allow='always' \
+      submodule \
+        update \
+          "vendor/base"
+  fi
   cd \
-    "${_tarname}"
+    "${srcdir}/${_tarname}"
   if [[ "${_git}" == "true" ]]; then
     if [[ "${_submodule_update}" == "true" ]]; then
       git \
         submodule \
           update \
             --init \
-	    --recursive
+            --recursive
       _submodules_paths+=( $(
         cat \
           ".gitmodules" |
           grep \
             "^[submodule \"" |
             sed |
-              "s/^\[submodule \"//g;
-               s/^\"\]")
+              -e \
+                "s/^\[submodule \"//g;
+                 s/\"\]$//g")
       )
       for _submodule_path \
         in "${_submodules_paths[@]}"; do
