@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=55
+pkgrel=56
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -358,7 +358,7 @@ prepare() {
   )
   if [[ ! -e "${HOME}/.gitconfig" ]]; then
     _msg=(
-      "This package requires"
+      "WARNING: This package requires"
       "to have configured a global"
       "git user configuration"
       "in '${HOME}/.gitconfig'."
@@ -366,8 +366,6 @@ prepare() {
     echo \
       "${_msg[*]}" \
       1>&2
-    exit \
-      1
   fi
   _email="PKGBUILD@${_pkg}.${_ns}"
   _user=(
