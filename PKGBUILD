@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=29
+pkgrel=30
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -372,7 +372,7 @@ prepare() {
       remote \
         add \
           origin \
-          "${_vendor_base_uri}"
+          "${_vendor_base_url}"
     _msg=(
       "Fetching commit"
       "${_base_tarname_commit}"
