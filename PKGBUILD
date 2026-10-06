@@ -378,12 +378,20 @@ prepare() {
       "${_base_tarname_commit}"
       "for repository '${_base_tarname}'."
     )
+    echo \
+      "${_msg[*]}"
     git \
       -C \
         "${_base_tarname}" \
       fetch \
         "origin" \
-	"${_frameworks_base_commit}"
+        "${_frameworks_base_commit}"
+    _msg=(
+      "Updating submodule"
+      "'${srcdir}/${_tarname}/vendor/base'."
+    )
+    echo \
+      "${_msg[*]}"
     git \
       -C \
       "${_tarname}" \
