@@ -148,7 +148,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=63
+pkgrel=64
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -510,10 +510,10 @@ prepare() {
     "vendor/CMakeLists.txt"
   _patch_pattern='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch}'
   _patch_repl='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch} || true'
-  sed \
-    "s%${_patch_pattern}%${_patch_repl}%g" \
-    -i \
-    "vendor/CMakeLists.txt"
+  # sed \
+  #   "s%${_patch_pattern}%${_patch_repl}%g" \
+  #   -i \
+  #   "vendor/CMakeLists.txt"
   _git_patch_pattern='${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches}'
   _git_patch_repl='${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches} || true'
   # sed \
