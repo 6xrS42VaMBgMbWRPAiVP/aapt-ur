@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=39
+pkgrel=40
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -509,6 +509,18 @@ prepare() {
         "${srcdir}/${_patch}"
     done
   fi
+  git \
+    config \
+      --global \
+      "user.email" \
+        "${_email}" || \
+  true
+  git \
+    config \
+      --global \
+      "user.name" \
+        "${_user[*]}" || \
+  true
   git \
     config \
       "user.email" \
