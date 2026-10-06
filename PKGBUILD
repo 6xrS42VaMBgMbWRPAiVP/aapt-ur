@@ -449,15 +449,6 @@ prepare() {
   cd \
     "${srcdir}/${_tarname}"
   if [[ "${_git}" == "true" ]]; then
-    _gitconfig=(
-      "[user]"
-      "        email = ${_email}"
-      "        name = ${_user[*]}"
-    )
-    printf \
-      "%s\n" \
-      "${_gitconfig[@]}" > \
-      "${HOME}/.gitconfig"
     if [[ "${_submodule_update}" == "true" ]]; then
       git \
         submodule \
