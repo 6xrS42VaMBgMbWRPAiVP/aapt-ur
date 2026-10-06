@@ -503,7 +503,7 @@ prepare() {
         printf \
           "%s\n" \
           "${_gitconfig[@]}" >> \
-          "${srcdir}/.git/modules/${_submodule_path}/config"
+          "${srcdir}/${_tarname}/.git/modules/${_submodule_path}/config"
         # git \
         #   -C \
         #     "${PWD}/${_path}" \
