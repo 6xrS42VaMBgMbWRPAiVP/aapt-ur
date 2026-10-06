@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=25
+pkgrel=26
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -268,15 +268,22 @@ elif [[ "${_git}" == "true" ]]; then
 fi
 source=(
   "${_src}"
-  "${_vendor_base_src}"
 )
 # sha512sums=(
 #   "${_android_512sum}"
 # )
 sha256sums=(
   "${_sum}"
-  "${_base_sum}"
+  # "${_base_sum}"
 )
+if [[ "${_depth1}" == "false" ]]; then
+  source+=(
+    "${_vendor_base_src}"
+  )
+  sha256sums=(
+    "${_base_sum}"
+  )
+fi
 options=(
   '!strip'
 )
@@ -364,17 +371,29 @@ prepare() {
         "${_base_tarname}" \
       remote \
         add \
+          origin \
           "${_vendor_base_uri}"
+    _msg=(
+      "Fetching commit"
+      "${_base_tarname_commit}"
+      "for repository '${_base_tarname}'."
+    )
     git \
       -C \
-      "${_base_tarname}" \
+        "${_base_tarname}" \
+      fetch \
+        "origin" \
+	"${_frameworks_base_commit}"
+    git \
+      -C \
+      "${_tarname}" \
       config \
         --local \
           "submodule.vendor/base.url" \
          "${srcdir}/${_base_tarname}"
     git \
       -C \
-        "${_base_tarname}" \
+        "${_tarname}" \
       -c \
         protocol.file.allow='always' \
       submodule \
