@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=53
+pkgrel=54
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -549,7 +549,15 @@ prepare() {
             "user.name" \
               "${_user[*]}" || \
         true
-        if [[ "${_os}" == "GNU/Linux" ]]; then
+        if [[ "${_os}" == "Android" ]]; then
+          git \
+            -C \
+              "${PWD}/${_path}" \
+            config \
+              set \
+                "advice.mergeConfict" \
+                  "false"
+        elif [[ "${_os}" == "GNU/Linux" ]]; then
           git \
             -C \
               "${PWD}/${_path}" \
