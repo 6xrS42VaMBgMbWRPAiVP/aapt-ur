@@ -148,7 +148,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=60
+pkgrel=61
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -355,6 +355,8 @@ prepare() {
     _patch_opts=() \
     _patch_pattern \
     _patch_repl \
+    _git_patch_pattern \
+    _git_patch_repl \
     _submodule_path \
     _submodules_paths=()
   _patch_opts+=(
@@ -509,7 +511,13 @@ prepare() {
   _patch_pattern='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch}'
   _patch_repl='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch} || true'
   sed \
-    "s%${_patch_pattern}%${_cmd_repl}%g" \
+    "s%${_patch_pattern}%${_patch_repl}%g" \
+    -i \
+    "vendor/CMakeLists.txt"
+  _git_patch_pattern='${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches}'
+  _git_patch_repl='${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches} || true'
+  sed \
+    "s%${_git_patch_pattern}%${_git_patch_repl}%g" \
     -i \
     "vendor/CMakeLists.txt"
   if [[ "${_git}" == "true" ]]; then
