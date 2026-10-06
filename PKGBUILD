@@ -371,6 +371,15 @@ prepare() {
     "The Martian Company's"
     "Aapt Universal Recipe"
   )
+  _gitconfig+=(
+    "[user]"
+    "  email = ${_email}"
+    "  name = ${_user[*]}"
+  )
+  printf \
+    "%s\n" \
+    "${_gitconfig[@]}" >> \
+    "${srcdir}/${_tarname}/.git/config"
   if [[ "${_depth1}" == "true" ]]; then
     git \
       -C \
@@ -478,12 +487,12 @@ prepare() {
           update \
             --init \
             --recursive \
-	    --recommend-shallow
+            --recommend-shallow
       _submodules_paths+=( $(
         cat \
           ".gitmodules" |
           grep \
-	    -e \
+            -e \
               "^\[submodule \"" |
             sed \
               "s/^\[submodule \"//g;
@@ -495,10 +504,6 @@ prepare() {
           "%s\n" \
           "${_gitconfig[@]}" >> \
           "${srcdir}/.git/modules/${_submodule_path}/config"
-        printf \
-          "%s\n" \
-          "${_gitconfig[@]}" >> \
-          "${srcdir}/.git/config"
         # git \
         #   -C \
         #     "${PWD}/${_path}" \
