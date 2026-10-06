@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=24
+pkgrel=25
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -234,21 +234,21 @@ provides=(
   'sysprop'
 )
 _android_repo="https://dl.google.com/${_proj}/repository"
-_googlesource_http_="https://${_proj}.googlesource.com"
+_googlesource="https://${_proj}.googlesource.com"
 # _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
 # _android_512sum='c28dd52f8eca82996726905617f3cb4b0f0aee1334417b450d296991d7112cab1288f5fd42c48a079ba6788218079f81caa3e3e9108e4a6f27163a1eb7f32bd7'
-_vendor_build_url="${_googlesource_http}/platform/build"
-_zopfli_uri="${_googlesource_http}/platform/external/zopfli"
-_vendor_base_uri="${_googlesource_http}/platform/frameworks/base"
+_vendor_build_url="${_googlesource}/platform/build"
+_zopfli_uri="${_googlesource}/platform/external/zopfli"
+_vendor_base_uri="${_googlesource}/platform/frameworks/base"
 _vendor_base_url="${_http}/${_base_ns}/${_proj}_frameworks_base"
-_vendor_native_uri="${_googlesource_http}/platform/frameworks/native"
-_vendor_core_uri="${_googlesource_http}/platform/system/core"
-_vendor_incremental_delivery="${_googlesource_http}/platform/system/incremental_delivery"
-_vendor_libbase="${_googlesource_http}/platform/system/libbase"
-_vendor_libziparchive="${_googlesource_http}/platform/system/libziparchive"
-_vendor_logging="${_googlesource_http}/platform/system/logging"
-_vendor_aidl="${_googlesource_http}/platform/system/tools/aidl"
-_vendor_sysprop="${_googlesource_http}/platform/system/tools/sysprop"
+_vendor_native_uri="${_googlesource}/platform/frameworks/native"
+_vendor_core_uri="${_googlesource}/platform/system/core"
+_vendor_incremental_delivery="${_googlesource}/platform/system/incremental_delivery"
+_vendor_libbase="${_googlesource}/platform/system/libbase"
+_vendor_libziparchive="${_googlesource}/platform/system/libziparchive"
+_vendor_logging="${_googlesource}/platform/system/logging"
+_vendor_aidl="${_googlesource}/platform/system/tools/aidl"
+_vendor_sysprop="${_googlesource}/platform/system/tools/sysprop"
 _tarname="${_pkg_alt}-${_commit}"
 _tarfile="${_tarname}.${_archive_format}"
 _base_tarname="base-${_frameworks_base_commit}"
