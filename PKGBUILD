@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=51
+pkgrel=52
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -342,6 +342,7 @@ done
 
 prepare() {
   local \
+    _git_submodule_config \
     _gitconfig=() \
     _email \
     _user=() \
@@ -500,23 +501,31 @@ prepare() {
       )
       for _submodule_path \
         in "${_submodules_paths[@]}"; do
-        printf \
-          "%s\n" \
-          "${_gitconfig[@]}" >> \
-          "${srcdir}/${_tarname}/.git/modules/${_submodule_path}/config"
-        # git \
-        #   -C \
-        #     "${PWD}/${_path}" \
-        #   config \
-        #     "user.email" \
-        #       "${_email}" || \
-        # true
-        # git \
-        #   -C \
-        #     "${PWD}/${_path}" \
-        #   config \
-        #     "user.name" \
-        #       "${_user[*]}" || \
+          _git_submodule_config="${srcdir}/${_tarname}/.git/modules/${_submodule_path}/config"
+        if [[ -e "${_git_submodule_config}" ]]; then
+          printf \
+            "%s\n" \
+            "${_gitconfig[@]}" >> \
+            "${srcdir}/${_tarname}/.git/modules/${_submodule_path}/config"
+        else
+          echo \
+            "File '${_git_submodule_config}'" \
+            "does not exist." \
+            1>&2
+        fi
+        git \
+          -C \
+            "${PWD}/${_path}" \
+          config \
+            "user.email" \
+              "${_email}" || \
+        true
+        git \
+          -C \
+            "${PWD}/${_path}" \
+          config \
+            "user.name" \
+              "${_user[*]}" || \
         true
         if [[ "${_os}" == "GNU/Linux" ]]; then
           git \
