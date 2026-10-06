@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=40
+pkgrel=41
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -342,6 +342,7 @@ done
 
 prepare() {
   local \
+    _gitconfig=() \
     _email \
     _user=() \
     _msg=() \
@@ -448,6 +449,15 @@ prepare() {
   cd \
     "${srcdir}/${_tarname}"
   if [[ "${_git}" == "true" ]]; then
+    _gitconfig=(
+      "[user]"
+      "        email = ${_email}"
+      "        name = ${_user[*]}"
+    )
+    printf \
+      "%s\n" \
+      "${_gitconfig[@]}" > \
+      "${HOME}/.gitconfig"
     if [[ "${_submodule_update}" == "true" ]]; then
       git \
         submodule \
@@ -466,19 +476,23 @@ prepare() {
       )
       for _submodule_path \
         in "${_submodules_paths[@]}"; do
-        git \
-          -C \
-            "${PWD}/${_path}" \
-          config \
-            "user.email" \
-              "${_email}" || \
-        true
-        git \
-          -C \
-            "${PWD}/${_path}" \
-          config \
-            "user.name" \
-              "${_user[*]}" || \
+        printf \
+          "%s\n" \
+          "${_gitconfig[@]}" >> \
+          "${srcdir}/.git/modules/${_submodule_path}/config"
+        # git \
+        #   -C \
+        #     "${PWD}/${_path}" \
+        #   config \
+        #     "user.email" \
+        #       "${_email}" || \
+        # true
+        # git \
+        #   -C \
+        #     "${PWD}/${_path}" \
+        #   config \
+        #     "user.name" \
+        #       "${_user[*]}" || \
         true
         if [[ "${_os}" == "GNU/Linux" ]]; then
           git \
@@ -509,28 +523,28 @@ prepare() {
         "${srcdir}/${_patch}"
     done
   fi
-  git \
-    config \
-      --global \
-      "user.email" \
-        "${_email}" || \
-  true
-  git \
-    config \
-      --global \
-      "user.name" \
-        "${_user[*]}" || \
-  true
-  git \
-    config \
-      "user.email" \
-        "${_email}" || \
-  true
-  git \
-    config \
-      "user.name" \
-        "${_user[*]}" || \
-  true
+  # git \
+  #   config \
+  #     --global \
+  #     "user.email" \
+  #       "${_email}" || \
+  # true
+  # git \
+  #   config \
+  #     --global \
+  #     "user.name" \
+  #       "${_user[*]}" || \
+  # true
+  # git \
+  #   config \
+  #     "user.email" \
+  #       "${_email}" || \
+  # true
+  # git \
+  #   config \
+  #     "user.name" \
+  #       "${_user[*]}" || \
+  # true
   if [[ "${_os}" == "GNU/Linux" ]]; then
     git \
       config \
