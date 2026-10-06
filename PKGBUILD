@@ -146,7 +146,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=33
+pkgrel=34
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -386,7 +386,7 @@ prepare() {
         "${_base_tarname}" \
       fetch \
         "origin" \
-	--depth \
+        --depth \
           1 \
         "${_frameworks_base_commit}" || \
    true
@@ -419,14 +419,22 @@ prepare() {
          "${srcdir}/${_base_tarname}"
     git \
       -C \
+      "${_tarname}" \
+      config \
+        -f \
+        ".gitmodules" \
+          "submodule.vendor/base.url.shallow" \
+          "true"
+    git \
+      -C \
         "${_tarname}" \
       -c \
         protocol.file.allow='always' \
       submodule \
         update \
           "vendor/base" \
-	  --depth \
-	  1
+          --depth \
+            1
   fi
   cd \
     "${srcdir}/${_tarname}"
