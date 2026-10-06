@@ -146,7 +146,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=31
+pkgrel=32
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -441,9 +441,8 @@ prepare() {
           grep \
             "^[submodule \"" |
             sed |
-              -e \
-                "s/^\[submodule \"//g;
-                 s/\"\]$//g")
+              "s/^\[submodule \"//g;
+               s/\"\]$//g")
       )
       for _submodule_path \
         in "${_submodules_paths[@]}"; do
