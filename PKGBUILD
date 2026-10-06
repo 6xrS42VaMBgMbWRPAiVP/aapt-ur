@@ -146,7 +146,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=32
+pkgrel=33
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -397,13 +397,13 @@ prepare() {
     )
     echo \
       "${_msg[*]}"
-    git \
-      -C \
-        "${_base_tarname}" \
-      checkout \
-        "origin" \
-        "${_frameworks_base_commit}" || \
-      true
+    # git \
+    #   -C \
+    #     "${_base_tarname}" \
+    #   checkout \
+    #     "origin" \
+    #     "${_frameworks_base_commit}" || \
+    #   true
     _msg=(
       "Updating submodule"
       "'${srcdir}/${_tarname}/vendor/base'."
@@ -424,7 +424,9 @@ prepare() {
         protocol.file.allow='always' \
       submodule \
         update \
-          "vendor/base"
+          "vendor/base" \
+	  --depth \
+	  1
   fi
   cd \
     "${srcdir}/${_tarname}"
