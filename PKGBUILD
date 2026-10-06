@@ -84,6 +84,9 @@ fi
 if [[ ! -v "_depth1" ]]; then
   _depth1="true"
 fi
+if [[ ! -v "_aidl" ]]; then
+  _aidl="true"
+fi
 if [[ ! -v "_archive_format" ]]; then
   if [[ "${_git}" == "true" ]]; then
     if [[ "${_evmfs}" == "true" ]]; then
@@ -233,9 +236,13 @@ optdepends=(
 provides=(
   'aapt'
   'aapt2'
-  'aidl'
   'sysprop'
 )
+if [[ "${_aidl}" == "true" ]]; then
+  provides+=(
+    "aidl"
+  )
+fi
 _android_repo="https://dl.google.com/${_proj}/repository"
 _googlesource="https://${_proj}.googlesource.com"
 # _android_uri="${_android_repo}/build-tools_r${_displayversion}-linux.zip"
@@ -758,65 +765,9 @@ package() {
   cmake \
     --install \
       "${srcdir}/${_tarname}/build/"
-  # install \
-  #   -d \
-  #   "usr/share/licenses/${pkgname}/"
-  # ln \
-  #   -s \
-  #   "${_root}/opt/${_sdk}/build-tools/${_ver}/NOTICE.txt" \
-  #   "usr/share/licenses/${pkgname}/NOTICE.txt"
-  # sed \
-  #   -i \
-  #   "s/@major@/${_major}/g;
-  #    s/@minor@/${_minor}/g;
-  #    s/@micro@/${_micro}/g;
-  #    s/@displayv@/${_displayversion}/g;
-  #    s/@pathv@/${_ver}/g" \
-  #    "${srcdir}/package.xml"
-  # install \
-  #   -Dm644 \
-  #   "${srcdir}/package.xml" \
-  #   "opt/${_sdk}/build-tools/${_ver}/package.xml"
-  # ln \
-  #   -s \
-  #   "${_root}/opt/${_sdk}/build-tools/${_ver}/package.xml" \
-  #   "usr/share/licenses/${pkgname}/package.xml"
-  # _target="opt/${_sdk}/build-tools/${_ver}"
-  # mkdir \
-  #   -p \
-  #   "${_target}"
-  # cp \
-  #   -r \
-  #   "${srcdir}/${_android}/"* \
-  #   "${_target}"
-  # chmod \
-  #   +Xr \
-  #   -R \
-  #   "${_target}"
-  # Add symlinks to binaries to usr/bin/
-  # mkdir \
-  #   -p \
-  #   "usr/bin/"
-  # lld is also provided by
-  # extra/lld, not creating symlink
-  # _binaries=( $(
-  #   find \
-  #     "${_target}" \
-  #     -maxdepth \
-  #       1 \
-  #     -type \
-  #       "f" \
-  #     -executable \
-  #     -not \
-  #     -iname \
-  #       "lld" \
-  #     -printf \
-  #       "%f\n")
-  # )
-  # for _f in ${_binaries[@]}; do
-  #   ln \
-  #     -s \
-  #     "${_root}/${_target}/${_f}" \
-  #     "usr/bin/${_f}"
-  # done
+  if [[ "${_aidl}" == "false" ]]; then
+    rm \
+      -vrf \
+      "${pkgdir}/usr/bin/aidl"
+  fi
 }
