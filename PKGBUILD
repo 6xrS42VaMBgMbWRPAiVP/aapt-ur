@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=56
+pkgrel=57
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -494,8 +494,8 @@ prepare() {
         "submodule"
           "--quiet"
             "update"
-	      "--init"
-	      "--recommend-shallow)"
+              "--init"
+              "--recommend-shallow)"
   )
   sed \
     "s/${_cmd[*]}/${_cmd_shallow[*]}/g" \
@@ -606,7 +606,25 @@ prepare() {
       "user.name" \
         "${_user[*]}" || \
   true
-  if [[ "${_os}" == "GNU/Linux" ]]; then
+  if [[ "${_os}" == "Android" ]]; then
+    git \
+      config \
+        set \
+          "advice.mergeConfict" \
+            "false"
+  elif [[ "${_os}" == "GNU/Linux" ]]; then
+    git \
+      config \
+        set \
+          "advice.mergeConfict" \
+            "false"
+  elif [[ "${_os}" == "MSys" ]]; then
+    git \
+      config \
+        set \
+          "advice.mergeConfict" \
+            "false"
+  else
     git \
       config \
         set \
