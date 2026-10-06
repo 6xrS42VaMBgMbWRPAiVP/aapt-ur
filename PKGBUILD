@@ -145,7 +145,7 @@ _pkgver="r${_ver}"
 pkgver="${_ver}"
 _commit="c4edf8539a34a8600538e6642c1ecb170452a79e"
 _frameworks_base_commit="45034f0663f960d9ee5fb0a101a4732b71f6e2f4"
-pkgrel=47
+pkgrel=48
 _pkgdesc=(
   'Build-Tools for Google Android SDK'
   '(aapt, aidl, dexdump, dx, llvm-rs-cc)'
@@ -438,13 +438,21 @@ prepare() {
         ".gitmodules" \
           "submodule.vendor/base.shallow" \
           "true"
+    echo \
+      "Repository '${_tarname}'"
+      "'.gitmodules' file:"
+    cat \
+      "${_tarname}/.gitmodules"
     git \
       -C \
         "${_tarname}" \
       -c \
         protocol.file.allow='always' \
+      -c \
+        submodule.vendor/base.shallow='true' \
       submodule \
         update \
+	  --init \
           --recommend-shallow \
           "vendor/base" || \
     true
@@ -453,6 +461,8 @@ prepare() {
         "${_tarname}" \
       -c \
         protocol.file.allow='always' \
+      -c \
+        submodule.vendor/base.shallow='true' \
       submodule \
         update \
           --recommend-shallow \
@@ -540,22 +550,22 @@ prepare() {
   #     "user.name" \
   #       "${_user[*]}" || \
   # true
-  # git \
-  #   config \
-  #     "user.email" \
-  #       "${_email}" || \
-  # true
-  # git \
-  #   config \
-  #     "user.name" \
-  #       "${_user[*]}" || \
-  # true
+  git \
+    config \
+      "user.email" \
+        "${_email}" || \
+  true
+  git \
+    config \
+      "user.name" \
+        "${_user[*]}" || \
+  true
   if [[ "${_os}" == "GNU/Linux" ]]; then
     git \
       config \
         set \
           "advice.mergeConfict" \
-	    "false"
+            "false"
   fi
 }
 
