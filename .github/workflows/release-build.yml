@@ -1088,25 +1088,15 @@ jobs:
       - name:
           Configures a git identity for user.
         run: |
-          _gitconfig=\( \
-            "[user]" \
-            "        email = ${_email}" \
-            "        name = ${_user[*]}" \
-          \); \
+          _email="PKGBUILD@$aapt.themartiancompany"; \
+          _name="The Martian Company's 'aapt' Universal Recipe"; \
           /entrypoint.sh \
             printf \
               "%s\n" \
-              "${_gitconfig[@]}" > \
-              "${HOME}/.gitconfig"; \
-         /entrypoint.sh \
-            chown \
-              -R \
-              "user:user" \
-              "/home/user/.gitconfig"; \
-         /entrypoint.sh \
-            chmod \
-              600 \
-              "/home/user/.gitconfig"
+              "[user]" \
+              "        email = ${_email}" \
+              "        name = ${_name}" > \
+              "${HOME}/.gitconfig"
       - name:
           Builds the Android package.
         run: |
@@ -1965,14 +1955,13 @@ jobs:
       - name:
           Configures a git identity for user.
         run: |
-          _gitconfig=( \
-            "[user]" \
-            "        email = ${_email}" \
-            "        name = ${_user[*]}" \
-          ); \
+          _email="PKGBUILD@$aapt.themartiancompany"; \
+          _name="The Martian Company's 'aapt' Universal Recipe"; \
           printf \
             "%s\n" \
-            "${_gitconfig[@]}" > \
+            "[user]" \
+            "        email = ${_email}" \
+            "        name = ${_name}" > \
             "/home/user/.gitconfig"
           chown \
             -R \
@@ -2511,22 +2500,12 @@ jobs:
       - name:
           Configures a git identity for user.
         run: |
-          _gitconfig=( \
-            "[user]" \
-            "        email = ${_email}" \
-            "        name = ${_user[*]}" \
-          ); \
           printf \
             "%s\n" \
-            "${_gitconfig[@]}" > \
-            "/home/user/.gitconfig"
-          chown \
-            -R \
-            "user:user" \
-            "/home/user/.gitconfig"
-          chmod \
-            600 \
-            "/home/user/.gitconfig"
+            "[user]" \
+            "        email = ${_email}" \
+            "        name = ${_name}" > \
+            "${HOME}/.gitconfig"
       - uses:
           actions/checkout@v7.0.1
       - name:
