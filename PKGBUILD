@@ -71,6 +71,9 @@ if [[ ! -v "_git" ]]; then
   _git="false"
 fi
 _git="true"
+if [[ ! -v "_git_advice_merge_conflict" ]]; then
+  _git_advice_merge_conflict="false"
+fi
 if [[ ! -v "_git_service" ]]; then
   _git_service="gitlab"
   _git_service="github"
@@ -547,15 +550,7 @@ prepare() {
             "user.name" \
               "${_user[*]}" || \
         true
-        if [[ "${_os}" == "Android" ]]; then
-          git \
-            -C \
-              "${PWD}/${_path}" \
-            config \
-              set \
-                "advice.mergeConfict" \
-                  "false"
-        elif [[ "${_os}" == "GNU/Linux" ]]; then
+        if [[ "${_git_advice_merge_conflict}" == "false" ]]; then
           git \
             -C \
               "${PWD}/${_path}" \
@@ -606,25 +601,7 @@ prepare() {
       "user.name" \
         "${_user[*]}" || \
   true
-  if [[ "${_os}" == "Android" ]]; then
-    git \
-      config \
-        set \
-          "advice.mergeConfict" \
-            "false"
-  elif [[ "${_os}" == "GNU/Linux" ]]; then
-    git \
-      config \
-        set \
-          "advice.mergeConfict" \
-            "false"
-  elif [[ "${_os}" == "MSys" ]]; then
-    git \
-      config \
-        set \
-          "advice.mergeConfict" \
-            "false"
-  else
+  if [[ "${_git_advice_merge_conflict}" == "false" ]]; then
     git \
       config \
         set \
