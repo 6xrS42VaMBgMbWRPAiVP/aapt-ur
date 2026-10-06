@@ -1088,12 +1088,12 @@ jobs:
       - name:
           Configures a git identity for user.
         run: |
+          _gitconfig=\( \
+            "[user]" \
+            "        email = ${_email}" \
+            "        name = ${_user[*]}" \
+          \); \
           /entrypoint.sh \
-            _gitconfig=( \
-              "[user]" \
-              "        email = ${_email}" \
-              "        name = ${_user[*]}" \
-            ); \
             printf \
               "%s\n" \
               "${_gitconfig[@]}" > \
