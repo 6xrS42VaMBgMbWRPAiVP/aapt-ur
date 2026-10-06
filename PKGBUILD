@@ -353,6 +353,8 @@ prepare() {
     _user=() \
     _msg=() \
     _patch_opts=() \
+    _patch_pattern \
+    _patch_repl \
     _submodule_path \
     _submodules_paths=()
   _patch_opts+=(
@@ -502,6 +504,12 @@ prepare() {
   )
   sed \
     "s/${_cmd[*]}/${_cmd_shallow[*]}/g" \
+    -i \
+    "vendor/CMakeLists.txt"
+  _patch_pattern='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch}'
+  _patch_repl='${CMAKE_CURRENT_SOURCE_DIR}/${v} -p1 -i ${patch} || true'
+  sed \
+    "s%${_patch_pattern}%${_cmd_repl}%g" \
     -i \
     "vendor/CMakeLists.txt"
   if [[ "${_git}" == "true" ]]; then
